@@ -16,13 +16,14 @@ import {
   View,
   TextInput,
   Alert,
+  FlatList
 } from 'react-native';
 
 
 const App: () => Node = () => {
 
   const [enteredTaskText, setEnteredTaskText] = useState('');
-  const [userTask, setUserTask] = useState([]);
+  const [userTask, setUserTask] = useState(['Task 1', 'Task 2', 'Task 3']);
 
 
   function taskInputHandler(enteredText) {
@@ -35,13 +36,34 @@ const App: () => Node = () => {
 
   return (
     <View style={styles.appContainer}>
+      <View>
+        <Text style={styles.appTitle}>
+          Hello, Kanit!
+        </Text>
+      </View>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.textContainer} placeholder="eg: 'Call Sam today'" onChangeText={taskInputHandler} />
+        <TextInput style={styles.textContainer} placeholder="eg: 'Call Sam today'" placeholderTextColor="#CCCCCC" onChangeText={taskInputHandler} />
         <Button title="Add Task" onPress={addTaskHandler} />
       </View>
 
       <View style={styles.TasksContainer}>
-        {userTask.map((task) => <Text key={task}>{task}</Text>)}
+        <FlatList
+          data={userTask}
+          renderItem={(itemData) => {
+            return (
+              <View
+                key={itemData}
+                style={styles.taskItems}
+              >
+                <Text style={styles.taskText}>
+                  {itemData.item}
+                </Text>
+              </View>
+            )
+          }
+          }
+          alwaysBounceVertical={false} />
+
       </View>
     </View>
 
@@ -53,6 +75,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 40,
     paddingHorizontal: 16,
+    backgroundColor: '#fff',
+  },
+  appTitle: {
+    fontSize: 36,
+    color: "#0F0E17",
+    fontFamily: "Inter",
+    fontWeight: "700",
   },
   inputContainer: {
     flex: 1,
@@ -61,17 +90,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#cccccc'
+    borderBottomColor: '#ECECEC'
   },
   textContainer: {
     borderWidth: 1,
-    borderColor: '#cccccc',
+    borderColor: '#ECECEC',
     width: '70%',
     marginRight: 8,
-    padding: 8
+    padding: 8,
+    color: '#0F0E17',
   },
   TasksContainer: {
-    flex: 5
+    flex: 5,
+  },
+  taskItems: {
+    margin: 8,
+    padding: 8,
+    borderRadius: 1,
+    height: 50,
+    shadowColor: "#ECECEC",
+    shadowRadius: 10,
+    elevation: 0.1,
+    justifyContent: "center",
+  },
+  taskText: {
+    color: '#0F0E17',
   }
 });
 
