@@ -10,60 +10,43 @@ import React from 'react';
 import { useState } from 'react';
 import type { Node } from 'react';
 import {
-  Button,
   StyleSheet,
   Text,
   View,
-  TextInput,
-  Alert,
   FlatList
 } from 'react-native';
 
+import TaskItem from './components/TaskItem';
+import TaskInput from './components/TaskInput';
 
 const App: () => Node = () => {
 
-  const [enteredTaskText, setEnteredTaskText] = useState('');
-  const [userTask, setUserTask] = useState(['Task 1', 'Task 2', 'Task 3']);
+  const [userTask, setUserTask] = useState([]);
 
-
-  function taskInputHandler(enteredText) {
-    setEnteredTaskText(enteredText);
-  };
-
-  function addTaskHandler() {
-    setUserTask((userTask) => [...userTask, enteredTaskText]);
-  };
+  function addTaskHandler(enteredTaskText) {
+    setUserTask((userTask) => [...userTask, { text: enteredTaskText, id: Math.random().toString() }]);
+  }
 
   return (
+
     <View style={styles.appContainer}>
       <View>
         <Text style={styles.appTitle}>
           Hello, Kanit!
         </Text>
       </View>
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.textContainer} placeholder="eg: 'Call Sam today'" placeholderTextColor="#CCCCCC" onChangeText={taskInputHandler} />
-        <Button title="Add Task" onPress={addTaskHandler} />
-      </View>
-
+      <TaskInput onAddText={addTaskHandler} />
       <View style={styles.TasksContainer}>
         <FlatList
           data={userTask}
           renderItem={(itemData) => {
-            return (
-              <View
-                key={itemData}
-                style={styles.taskItems}
-              >
-                <Text style={styles.taskText}>
-                  {itemData.item}
-                </Text>
-              </View>
-            )
+            return <TaskItem text={itemData.item.text} />;
           }
           }
+          keyExtractor={(item, index) => {
+            return item.id;
+          }}
           alwaysBounceVertical={false} />
-
       </View>
     </View>
 
@@ -83,39 +66,9 @@ const styles = StyleSheet.create({
     fontFamily: "Inter",
     fontWeight: "700",
   },
-  inputContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ECECEC'
-  },
-  textContainer: {
-    borderWidth: 1,
-    borderColor: '#ECECEC',
-    width: '70%',
-    marginRight: 8,
-    padding: 8,
-    color: '#0F0E17',
-  },
   TasksContainer: {
     flex: 5,
   },
-  taskItems: {
-    margin: 8,
-    padding: 8,
-    borderRadius: 1,
-    height: 50,
-    shadowColor: "#ECECEC",
-    shadowRadius: 10,
-    elevation: 0.1,
-    justifyContent: "center",
-  },
-  taskText: {
-    color: '#0F0E17',
-  }
 });
 
 export default App;
